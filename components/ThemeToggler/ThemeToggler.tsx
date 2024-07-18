@@ -16,10 +16,10 @@ export default function ThemeToggle() {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <div className="flex justify-center">
+    <div className="">
       {currentTheme === "dark" ? (
         <button
-          className="bg-black-700 hover:bg-black w-28 rounded-md border-purple-400 border-2 p-4"
+          className="bg-black-700 hover:bg-black  rounded-md  border-2 p-4"
           onClick={() => setTheme("light")}
         >
           {" "}
@@ -28,7 +28,7 @@ export default function ThemeToggle() {
         </button>
       ) : (
         <button
-          className="bg-gray-100 w-28 rounded-md border-purple-400 border-2 p-4 hover:bg-gray-300"
+          className="bg-gray-100  rounded-md  border-2 p-4 hover:bg-gray-300"
           onClick={() => setTheme("dark")}
         >
           <FaSun />

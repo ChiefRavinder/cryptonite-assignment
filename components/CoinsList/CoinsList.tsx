@@ -16,7 +16,7 @@ const CoinsList = () => {
         <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b">
+            <tr className="text-sm border-b">
               <th className="px-4 py-2">Token</th>
               <th className="px-4 py-2">Symbol</th>
               <th className="px-4 py-2">Last Price</th>
@@ -26,7 +26,7 @@ const CoinsList = () => {
           </thead>
           <tbody>
             {coins.map((token, index) => (
-              <tr key={index} className="">
+              <tr key={index} className="text-sm hover:bg-slate-900 rounded-sm">
                 <td className="px-4 py-2 flex gap-2">
                   <Image
                     src={token.image}
@@ -37,7 +37,7 @@ const CoinsList = () => {
                   {token.name}{" "}
                 </td>
                 <td className="px-4 py-2"> {token.symbol}</td>
-                <td className="px-4 py-2">{token.current_price}</td>
+                <td className="px-4 py-2">${token.current_price}</td>
                 <td
                   className={`px-4 py-2  ${
                     token.price_change_percentage_24h < 0
@@ -63,31 +63,6 @@ const CoinsList = () => {
           </tbody>
         </table>
       </div>
-      {coins.map((coin) => (
-        <div key={coin.id} style={{ marginBottom: "20px" }}>
-          <Image src={coin.image} alt={coin.name} width={50} height={50} />
-          <h3>
-            {coin.name} ({coin.symbol.toUpperCase()})
-          </h3>
-          <p>Current Price: ${coin.current_price}</p>
-          <p>Market Cap: ${coin.market_cap.toLocaleString()}</p>
-          <p>24h High: ${coin.high_24h}</p>
-          <p>24h Low: ${coin.low_24h}</p>
-          <p>
-            Price Change 24h: ${coin.price_change_24h} (
-            {coin.price_change_percentage_24h}%)
-          </p>
-          <p>
-            All-Time High: ${coin.ath} ({coin.ath_change_percentage}%) on{" "}
-            {new Date(coin.ath_date).toLocaleDateString()}
-          </p>
-          <p>
-            All-Time Low: ${coin.atl} ({coin.atl_change_percentage}%) on{" "}
-            {new Date(coin.atl_date).toLocaleDateString()}
-          </p>
-          <p>Last Updated: {new Date(coin.last_updated).toLocaleString()}</p>
-        </div>
-      ))}
     </div>
   );
 };
