@@ -2,30 +2,51 @@ import { ThemeProvider } from "next-themes";
 import ThemeToggle from "@/components/ThemeToggler/ThemeToggler";
 import CoinsList from "@/components/CoinsList/CoinsList";
 import Graph from "@/components/Graph/Graph";
-import LineChartComponent from "@/components/LineChart/LineChart";
+// import LineChartComponent from "@/components/LineChart/LineChart";
+import CoinPriceChart from "@/components/LineChart/LineChart";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import RecentlyViewed from "@/components/RecentlyViewed/RecentlyViewed";
 import WatchList from "@/components/WatchList/WatchList";
 import Navbar from "@/components/Navbar/Navbar";
+import { Providers } from "@/Providers/Providers";
+
 export default function Home() {
+  interface DataPoint {
+    time: string;
+    BTC?: number;
+    ETH?: number;
+    LTC?: number;
+    [key: string]: number | string | undefined;
+  }
+
+  const initialData: DataPoint[] = [
+    { time: "10:59PM", BTC: 3000, ETH: 3000, LTC: 3000 },
+    { time: "11:59PM", BTC: 3200, ETH: 3100, LTC: 3150 },
+    { time: "12:59AM", BTC: 3400, ETH: 3300, LTC: 3250 },
+    // Add more data points as needed
+  ];
+
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
-      {/* <div className="text-black dark:text-white">welcome</div> */}
-      <Navbar />
-      <div className="mx-8">
-        <div className="flex flex-1 justify-between gap-5">
-          <div>
-            <div className="h-[55vh]">
-              {/* <Graph /> */}
-              <LineChartComponent />
+    <Providers>
+      <ThemeProvider enableSystem={true} attribute="class">
+        {/* <div className="text-black dark:text-white">welcome</div> */}
+        <Navbar />
+        <div className="mx-8">
+          <div className="flex flex-1 justify-between gap-5">
+            <div>
+              <div className="h-[55vh]">
+                <CoinPriceChart />
+              </div>
+              <CoinsList />
             </div>
-            <CoinsList />
-          </div>
-          <div className="flex-col gap-10">
-            <RecentlyViewed />
-            <WatchList />
+            <div className="flex-col gap-10">
+              <RecentlyViewed />
+              <WatchList   />
+            </div>
           </div>
         </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Providers>
   );
 }

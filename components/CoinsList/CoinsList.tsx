@@ -1,17 +1,24 @@
+"use client";
 // Import necessary modules and types
 import { Coin } from "@/type";
 import dummy from "@/public/statics/dummy.json";
 import Image from "next/image";
 import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+import { setNumber } from "@/features/activeCard/activeCardSlice";
 // Ensure TypeScript knows the type of 'dummy'
 const coins: Coin[] = dummy as Coin[];
 
 const CoinsList = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const number = useSelector((state: RootState) => state.number.value);
   if (coins.length === 0) return <div>Loading</div>;
 
   return (
     <div>
+      <div>{number}</div>
       <div className="p-4  rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
         <table className="w-full text-left">
@@ -26,7 +33,17 @@ const CoinsList = () => {
           </thead>
           <tbody>
             {coins.map((token, index) => (
-              <tr key={index} className="text-sm hover:bg-slate-900 rounded-sm">
+              <tr
+                key={index}
+                className="text-sm hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
+                draggable
+                onDragStart={() => {
+                  dispatch(setNumber(index));
+                }}
+                onDragEnd={() => {
+                  dispatch(setNumber(-1));
+                }}
+              >
                 <td className="px-4 py-2 flex gap-2">
                   <Image
                     src={token.image}
@@ -55,9 +72,7 @@ const CoinsList = () => {
                   </div>
                 </td>
 
-                <td className="px-4 py-2">
-                  {token.market_cap.toLocaleString()}
-                </td>
+                <td className="px-4 py-2">{token.market_cap}</td>
               </tr>
             ))}
           </tbody>
