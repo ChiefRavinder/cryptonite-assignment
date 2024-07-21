@@ -134,7 +134,9 @@ const Page = () => {
             <div className="pl-4">
               <h2 className="text-xl font-bold mb-4">Description</h2>
             </div>
-            <div className="pl-4 mb-4 text-sm">{parse(data.description.en)}</div>
+            <div className="pl-4 mb-4 text-sm">
+              {parse(data.description.en)}
+            </div>
           </div>
           <div className="flex-col gap-10 hidden md:flex">
             <RecentlyViewed />

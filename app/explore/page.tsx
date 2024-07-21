@@ -12,8 +12,10 @@ const explore = () => {
             <CoinsList />
           </div>
           <div className="flex-col gap-10">
+          <div className="flex-col gap-10 hidden md:flex">
             <RecentlyViewed />
             <WatchList />
+          </div>
           </div>
         </div>
       </div>
