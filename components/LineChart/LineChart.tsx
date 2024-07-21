@@ -43,7 +43,20 @@ const timeRanges: Record<string, number> = {
   "1Y": 365,
 };
 
-const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) => {
+// Predefined array of colors
+const colors = [
+  "rgba(91,56,237,255)",
+  "rgba(56,237,91,255)",
+  "rgba(237,91,56,255)",
+  "rgba(56,91,237,255)",
+  "rgba(237,56,91,255)",
+  "rgba(91,237,56,255)",
+];
+
+const CoinPriceChart: React.FC<CoinPriceChartProps> = ({
+  coinIds,
+  ...props
+}) => {
   const [chartData, setChartData] = useState<ChartData<"line">>({
     labels: [],
     datasets: [],
@@ -111,7 +124,7 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) =>
   };
 
   const fetchChartData = async () => {
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+    const apiKey = process.env.COINGECKO_API_KEY;
     try {
       const today = new Date();
       const to = Math.floor(today.getTime() / 1000);
@@ -120,7 +133,7 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) =>
 
       const vsCurrency = "usd";
 
-      const allPricesPromises = coinIds.map((coinId) =>
+      const allPricesPromises = coinIds.map((coinId, index) =>
         axios.get<{
           prices: [number, number][];
         }>(
@@ -140,7 +153,9 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) =>
 
       const allPricesResponses = await Promise.all(allPricesPromises);
 
-      const allPrices = allPricesResponses.map((response) => response.data.prices);
+      const allPrices = allPricesResponses.map(
+        (response) => response.data.prices
+      );
 
       const labels = allPrices[0].map((price) =>
         new Date(price[0]).toLocaleDateString()
@@ -155,11 +170,17 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) =>
         backgroundColor: (context: ScriptableContext<"line">) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-          gradient.addColorStop(0, "rgba(91,56,237,0.45)");
-          gradient.addColorStop(1, "rgba(91,56,237,0.0)");
+          gradient.addColorStop(
+            0,
+            `${colors[index % colors.length].replace("255", "0.45")}`
+          );
+          gradient.addColorStop(
+            1,
+            `${colors[index % colors.length].replace("255", "0.0")}`
+          );
           return gradient;
         },
-        borderColor: "rgba(91,56,237,255)",
+        borderColor: colors[index % colors.length],
         fill: true,
       }));
 
@@ -196,7 +217,7 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({ coinIds, ...props }) =>
         id="myChart"
         data={chartData}
         options={options}
-        style={{ height: '100%' }} // Ensure full height of parent container
+        style={{ height: "100%" }} // Ensure full height of parent container
       />
       <div className="absolute top-0 right-0 p-2">
         <button
