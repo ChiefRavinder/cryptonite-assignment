@@ -29,7 +29,11 @@ const CoinsList = () => {
       console.log("Fetching coins from API");
       const res = await fetch(
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-        
+        {
+          headers: {
+            "x-cg-pro-api-key": `${apiKey}`,
+          },
+        }
       );
 
       const repo: Coin[] = await res.json();
