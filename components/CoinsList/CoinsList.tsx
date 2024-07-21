@@ -24,21 +24,22 @@ const CoinsList = () => {
   const itemsPerPage = 10; // Number of items per page
 
   useEffect(() => {
-    const apiKey = process.env.COINGECKO_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     const fetchCoins = async () => {
       console.log("Fetching coins from API");
       const res = await fetch(
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
-        {
-          headers: {
-            "x-cg-pro-api-key": `${apiKey}`,
-          },
-        }
+        // {
+        //   headers: {
+        //     "x-cg-pro-api-key": `${apiKey}`,
+        //   },
+        // }
       );
 
       const repo: Coin[] = await res.json();
       // Cache the fetched data with the current timestamp
-      console.log("Setting cookies with fetched data");
+      console.log("Setting cookies with fetched data")
+      console.log(apiKey)
       Cookies.set(
         "cookies_main",
         JSON.stringify({ timestamp: Date.now(), data: repo }),
@@ -53,6 +54,7 @@ const CoinsList = () => {
       const { timestamp, data } = JSON.parse(cachedData);
       if (Date.now() - timestamp < CACHE_EXPIRY_TIME) {
         console.log("Using cached data");
+        
         dispatch(setCoins(data));
       } else {
         console.log("Cached data expired, fetching new data");
@@ -62,8 +64,11 @@ const CoinsList = () => {
       console.log("No cached data, fetching new data");
       fetchCoins();
     }
-  }, [dispatch]);
-
+  }, []);
+ 
+  if (!coins) {
+    return <div>No data available</div>;
+  }
   // Calculate the coins to display based on the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const selectedCoins = coins.slice(startIndex, startIndex + itemsPerPage);

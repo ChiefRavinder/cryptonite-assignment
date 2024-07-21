@@ -170,7 +170,7 @@ const WatchList: React.FC = () => {
 
   return (
     <div>
-      <div className="p-4 rounded-lg shadow-md">
+      <div className="min-w-[29rem] p-4 rounded-lg shadow-md">
         <h2 className="text-l font-semibold mb-4">Watch List</h2>
         {watchList.length == 0 ? (
           <>
