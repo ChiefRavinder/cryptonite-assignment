@@ -4,7 +4,7 @@ import WatchList from "@/components/WatchList/WatchList";
 const explore = () => {
   return (
     <div>
-      explore
+    
       <div className="mx-8">
         <div className="flex flex-1 justify-between gap-5">
           <div>

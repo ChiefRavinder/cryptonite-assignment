@@ -127,7 +127,7 @@ const Page = () => {
               />
             </div>
             <div className="h-[55vh]">
-              <CoinPriceChart />
+              <CoinPriceChart coinId={id as string} />
             </div>
             {data.description.en}
           </div>

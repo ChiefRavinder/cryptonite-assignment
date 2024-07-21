@@ -1,7 +1,7 @@
 "use client";
 import { Coin } from "@/type";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
@@ -18,6 +18,10 @@ const CoinsList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const number = useSelector((state: RootState) => state.number.value);
   const coins = useSelector((state: RootState) => state.coins.coins) || [];
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Number of items per page
 
   useEffect(() => {
     const fetchCoins = async () => {
@@ -53,9 +57,20 @@ const CoinsList = () => {
     }
   }, [dispatch]);
 
+  // Calculate the coins to display based on the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const selectedCoins = coins.slice(startIndex, startIndex + itemsPerPage);
+
+  // Function to handle page change
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(coins.length / itemsPerPage);
+
   return (
     <div>
-      <div>{number}</div>
       <div className="p-4 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
         <table className="w-full text-left">
@@ -69,17 +84,17 @@ const CoinsList = () => {
             </tr>
           </thead>
           <tbody>
-            {coins.map((token, index) => (
+            {selectedCoins.map((token, index) => (
               <tr
                 onClick={() => {
-                  dispatch(addRecentWatchList(coins[index]));
+                  dispatch(addRecentWatchList(coins[startIndex + index]));
                   router.push(`/coins?id=${token.id}`);
                 }}
                 key={index}
-                className="text-sm hover:bg-gray-200 dark:hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
+                className="text-gray-200 text-sm hover:bg-gray-200 dark:hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
                 draggable
                 onDragStart={() => {
-                  dispatch(setNumber(index));
+                  dispatch(setNumber(startIndex + index));
                 }}
                 onDragEnd={() => {
                   dispatch(setNumber(-1));
@@ -94,7 +109,7 @@ const CoinsList = () => {
                   />
                   {token.name}
                 </td>
-                <td className="px-4 py-2"> {token.symbol}</td>
+                <td className="px-4 py-2">{token.symbol}</td>
                 <td className="px-4 py-2">${token.current_price}</td>
                 <td
                   className={`px-4 py-2 ${
@@ -117,6 +132,25 @@ const CoinsList = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-4 py-2">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

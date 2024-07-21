@@ -10,6 +10,7 @@ import RecentlyViewed from "@/components/RecentlyViewed/RecentlyViewed";
 import WatchList from "@/components/WatchList/WatchList";
 import Navbar from "@/components/Navbar/Navbar";
 import { Providers } from "@/Providers/Providers";
+import Link from "next/link";
 
 export default function Home() {
   interface DataPoint {
@@ -30,14 +31,21 @@ export default function Home() {
   return (
     <>
       {/* <div className="text-black dark:text-white">welcome</div> */}
-      
+
       <div className="mx-8">
         <div className="flex flex-1 justify-between gap-5">
           <div>
             <div className="h-[55vh]">
-              <CoinPriceChart />
+              <CoinPriceChart coinId={"bitcoin"} />
             </div>
-            <CoinsList />
+            <div className="relative">
+              <CoinsList />
+              <Link href="/explore">
+                <span className="absolute top-2 right-2 flex justify-end hover:text-green-500">
+                  View More
+                </span>
+              </Link>
+            </div>
           </div>
           <div className="flex-col gap-10">
             <RecentlyViewed />
