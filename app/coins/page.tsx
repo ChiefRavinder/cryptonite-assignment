@@ -126,8 +126,8 @@ const Page = () => {
                 circulatingSupply={`${data.market_data.circulating_supply} ${data.symbol}`}
               />
             </div>
-            <div className="h-[55vh]">
-              <CoinPriceChart coinId={id as string} />
+            <div className="h-full">
+              <CoinPriceChart coinIds={[id as string]} />
             </div>
             {data.description.en}
           </div>
