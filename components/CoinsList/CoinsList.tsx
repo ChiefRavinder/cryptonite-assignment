@@ -40,30 +40,31 @@ const CoinsList = () => {
       // Cache the fetched data with the current timestamp
       console.log("Setting cookies with fetched data")
       console.log(apiKey)
-      Cookies.set(
-        "cookies_main",
-        JSON.stringify({ timestamp: Date.now(), data: repo }),
-        { expires: 1 / 288 }
-      ); // 1/288 days = 5 minutes
+      // Cookies.set(
+      //   "cookies_main",
+      //   JSON.stringify({ timestamp: Date.now(), data: repo }),
+      //   { expires: 1 / 288 }
+      // ); // 1/288 days = 5 minutes
       dispatch(setCoins(repo));
     };
 
-    const cachedData = Cookies.get("cookies_main");
-    console.log("Cached data retrieved:", cachedData);
-    if (cachedData) {
-      const { timestamp, data } = JSON.parse(cachedData);
-      if (Date.now() - timestamp < CACHE_EXPIRY_TIME) {
-        console.log("Using cached data");
+    // const cachedData = Cookies.get("cookies_main");
+    // console.log("Cached data retrieved:", cachedData);
+    // if (cachedData) {
+    //   const { timestamp, data } = JSON.parse(cachedData);
+    //   if (Date.now() - timestamp < CACHE_EXPIRY_TIME) {
+    //     console.log("Using cached data");
         
-        dispatch(setCoins(data));
-      } else {
-        console.log("Cached data expired, fetching new data");
-        fetchCoins();
-      }
-    } else {
-      console.log("No cached data, fetching new data");
-      fetchCoins();
-    }
+    //     dispatch(setCoins(data));
+    //   } else {
+    //     console.log("Cached data expired, fetching new data");
+    //     fetchCoins();
+    //   }
+    // } else {
+    //   console.log("No cached data, fetching new data");
+    //   fetchCoins();
+    // }
+    fetchCoins();
   }, []);
  
   if (!coins) {
