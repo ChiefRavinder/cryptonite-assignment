@@ -19,7 +19,7 @@ export default function ThemeToggle() {
     <div className="">
       {currentTheme === "dark" ? (
         <button
-          className="bg-black-700 hover:bg-black  rounded-md  border-2 p-4"
+          className="bg-black-700 hover:bg-black  rounded-[100%]  border-2 p-2"
           onClick={() => setTheme("light")}
         >
           {" "}
@@ -28,7 +28,7 @@ export default function ThemeToggle() {
         </button>
       ) : (
         <button
-          className="bg-gray-100  rounded-md  border-2 p-4 hover:bg-gray-300"
+          className="bg-gray-100  rounded-[100%]  border-2 p-2 hover:bg-gray-300"
           onClick={() => setTheme("dark")}
         >
           <FaSun />

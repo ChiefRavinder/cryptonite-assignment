@@ -141,8 +141,13 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = (props) => {
   };
 
   return (
-    <div {...props} className="relative">
-      <Line id="myChart" data={chartData} options={options} />
+    <div {...props} className="relative w-[50vw]">
+      <Line
+        className="w-[100vw]"
+        id="myChart"
+        data={chartData}
+        options={options}
+      />
       <div className="absolute top-0 right-0 p-2">
         <button
           onClick={() => setShowDropdown(!showDropdown)}

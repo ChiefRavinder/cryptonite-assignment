@@ -1,25 +1,62 @@
 "use client";
-// Import necessary modules and types
 import { Coin } from "@/type";
-import dummy from "@/public/statics/dummy.json";
 import Image from "next/image";
-import { FaArrowUp } from "react-icons/fa";
-import { FaArrowDown } from "react-icons/fa";
+import { useEffect } from "react";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { setNumber } from "@/features/activeCard/activeCardSlice";
-// Ensure TypeScript knows the type of 'dummy'
-const coins: Coin[] = dummy as Coin[];
+import { setCoins } from "@/features/coins/coinsSlice";
+import { useRouter } from "next/navigation";
+import { addRecentWatchList } from "@/features/recentList/recentListSlice";
+import Cookies from "js-cookie";
 
 const CoinsList = () => {
+  const CACHE_KEY = "coins_cache";
+  const CACHE_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const number = useSelector((state: RootState) => state.number.value);
-  if (coins.length === 0) return <div>Loading</div>;
+  const coins = useSelector((state: RootState) => state.coins.coins) || [];
+
+  useEffect(() => {
+    const fetchCoins = async () => {
+      console.log("Fetching coins from API");
+      const res = await fetch(
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
+      );
+      const repo: Coin[] = await res.json();
+      // Cache the fetched data with the current timestamp
+      console.log("Setting cookies with fetched data");
+      Cookies.set(
+        "cookies_main",
+        JSON.stringify({ timestamp: Date.now(), data: repo }),
+        { expires: 1 / 288 }
+      ); // 1/288 days = 5 minutes
+      dispatch(setCoins(repo));
+    };
+
+    const cachedData = Cookies.get("cookies_main");
+    console.log("Cached data retrieved:", cachedData);
+    if (cachedData) {
+      const { timestamp, data } = JSON.parse(cachedData);
+      if (Date.now() - timestamp < CACHE_EXPIRY_TIME) {
+        console.log("Using cached data");
+        dispatch(setCoins(data));
+      } else {
+        console.log("Cached data expired, fetching new data");
+        fetchCoins();
+      }
+    } else {
+      console.log("No cached data, fetching new data");
+      fetchCoins();
+    }
+  }, [dispatch]);
 
   return (
     <div>
       <div>{number}</div>
-      <div className="p-4  rounded-lg shadow-md">
+      <div className="p-4 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
         <table className="w-full text-left">
           <thead>
@@ -34,8 +71,12 @@ const CoinsList = () => {
           <tbody>
             {coins.map((token, index) => (
               <tr
+                onClick={() => {
+                  dispatch(addRecentWatchList(coins[index]));
+                  router.push(`/coins?id=${token.id}`);
+                }}
                 key={index}
-                className="text-sm hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
+                className="text-sm hover:bg-gray-200 dark:hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
                 draggable
                 onDragStart={() => {
                   dispatch(setNumber(index));
@@ -51,27 +92,26 @@ const CoinsList = () => {
                     width={25}
                     height={25}
                   />
-                  {token.name}{" "}
+                  {token.name}
                 </td>
                 <td className="px-4 py-2"> {token.symbol}</td>
                 <td className="px-4 py-2">${token.current_price}</td>
                 <td
-                  className={`px-4 py-2  ${
+                  className={`px-4 py-2 ${
                     token.price_change_percentage_24h < 0
                       ? "text-red-500"
                       : "text-green-500"
                   }`}
                 >
-                  <div className="flex  gap-2 align-middle">
+                  <div className="flex gap-2 align-middle">
                     {token.price_change_percentage_24h < 0 ? (
-                      <FaArrowDown /> // Or any icon you want for negative change
+                      <FaArrowDown />
                     ) : (
-                      <FaArrowUp /> // Or any icon you want for positive change
+                      <FaArrowUp />
                     )}
                     {token.price_change_percentage_24h}
                   </div>
                 </td>
-
                 <td className="px-4 py-2">{token.market_cap}</td>
               </tr>
             ))}

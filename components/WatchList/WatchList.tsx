@@ -1,17 +1,21 @@
 // src/components/WatchList.tsx
-"use client"
-import React, { useEffect } from 'react';
-import Image from 'next/image';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@/store/store';
-import { setCoins } from '@/features/coins/coinsSlice';
-import { Coin } from '@/type';  // Make sure this path is correct
+"use client";
+import React, { useEffect } from "react";
+import Image from "next/image";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+import { setCoins } from "@/features/coins/coinsSlice";
+import { Coin } from "@/type"; // Make sure this path is correct
+import DropArea from "../DropArea/DropArea";
+import { setWatchlist } from "@/features/watchList/watchList";
 
 const WatchList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const coins = useSelector((state: RootState) => state.coins.coins);
 
+  const watchList = useSelector(
+    (state: RootState) => state.watchList.watchlist
+  );
   const coinsData: Coin[] = [
     {
       id: "bitcoin",
@@ -163,61 +167,68 @@ const WatchList: React.FC = () => {
       last_updated: "2024-07-18T12:00:40.157Z",
     },
   ];
-  useEffect(() => {
-    // Example: Fetch coins data and dispatch setCoins
-    // fetchCoins().then(data => dispatch(setCoins(data)));
-    dispatch(setCoins(coinsData))
-  }, [dispatch]);
 
   return (
     <div>
       <div className="p-4 rounded-lg shadow-md">
         <h2 className="text-l font-semibold mb-4">Watch List</h2>
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b text-sm">
-              <th className="px-4 py-2">Token</th>
-              <th className="px-4 py-2">Last Price</th>
-              <th className="px-4 py-2">24H Change</th>
-              <th className="px-4 py-2">Market Cap</th>
-            </tr>
-          </thead>
-          <tbody>
-            {coins.map((token: Coin, index: number) => (
-              <tr key={index} className="text-sm">
-                <td className="px-4 py-2 flex gap-2">
-                  <Image
-                    src={token.image}
-                    alt={token.name}
-                    width={25}
-                    height={25}
-                  />
-                  {token.name}
-                </td>
-                <td className="px-4 py-2">${token.current_price}</td>
-                <td
-                  className={`px-4 py-2 ${
-                    token.price_change_percentage_24h < 0
-                      ? 'text-red-500'
-                      : 'text-green-500'
-                  }`}
-                >
-                  <div className="flex gap-2 align-middle">
-                    {token.price_change_percentage_24h < 0 ? (
-                      <FaArrowDown />
-                    ) : (
-                      <FaArrowUp />
-                    )}
-                    {token.price_change_percentage_24h}
-                  </div>
-                </td>
-                <td className="px-4 py-2">
-                  {token.market_cap.toLocaleString()}
+        {watchList.length == 0 ? (
+          <>
+            Drop your favourite bitcoin here
+            <DropArea></DropArea>
+          </>
+        ) : (
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b text-sm">
+                <th className="px-4 py-2">Token</th>
+                <th className="px-4 py-2">Last Price</th>
+                <th className="px-4 py-2">24H Change</th>
+                <th className="px-4 py-2">Market Cap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="text-sm">
+                <td>
+                  <DropArea />
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              {watchList.map((token: Coin, index: number) => (
+                <tr key={index} className="text-sm">
+                  <td className="px-4 py-2 flex gap-2">
+                    <Image
+                      src={token.image}
+                      alt={token.name}
+                      width={25}
+                      height={25}
+                    />
+                    {token.name}
+                  </td>
+                  <td className="px-4 py-2">${token.current_price}</td>
+                  <td
+                    className={`px-4 py-2 ${
+                      token.price_change_percentage_24h < 0
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    <div className="flex gap-2 align-middle">
+                      {token.price_change_percentage_24h < 0 ? (
+                        <FaArrowDown />
+                      ) : (
+                        <FaArrowUp />
+                      )}
+                      {token.price_change_percentage_24h}
+                    </div>
+                  </td>
+                  <td className="px-4 py-2">
+                    {token.market_cap.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

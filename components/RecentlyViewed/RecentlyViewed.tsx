@@ -1,8 +1,11 @@
-import React from "react";
+// import React from "react";
+"use client";
 import { Coin } from "@/type";
 import Image from "next/image";
 import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
 
 const RecentlyViewed = () => {
   const coins: Coin[] = [
@@ -156,61 +159,69 @@ const RecentlyViewed = () => {
       last_updated: "2024-07-18T12:00:40.157Z",
     },
   ];
+  const dispatch = useDispatch<AppDispatch>();
 
+  const recentWatchList = useSelector(
+    (state: RootState) => state.recentList.recentWatchlist
+  );
   return (
-    <div>
-      <div className="p-4  rounded-lg shadow-md">
-        <h2 className="text-l font-semibold mb-4">Recently Viewed</h2>
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b text-sm">
-              <th className="px-4 py-2">Token</th>
-       
-              <th className="px-4 py-2">Last Price</th>
-              <th className="px-4 py-2">24H Change</th>
-              <th className="px-4 py-2">Market Cap</th>
-            </tr>
-          </thead>
-          <tbody>
-            {coins.map((token, index) => (
-              <tr key={index} className="text-sm">
-                <td className="px-4 py-2 flex gap-2">
-                  <Image
-                    src={token.image}
-                    alt={token.name}
-                    width={25}
-                    height={25}
-                  />
-                  {token.name}{" "}
-                </td>
+    <div className="p-4  rounded-lg shadow-md">
+      <h2 className="text-l font-semibold mb-2 ">Recently Viewed</h2>
+      <div className="">
+      {recentWatchList.length == 0 ? (
+        <span>No recent watch list</span>
+      ) : (
+        
           
-                <td className="px-4 py-2">${token.current_price}</td>
-                <td
-                  className={`px-4 py-2  ${
-                    token.price_change_percentage_24h < 0
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  <div className="flex  gap-2 align-middle">
-                    {token.price_change_percentage_24h < 0 ? (
-                      <FaArrowDown /> // Or any icon you want for negative change
-                    ) : (
-                      <FaArrowUp /> // Or any icon you want for positive change
-                    )}
-                    {token.price_change_percentage_24h}
-                  </div>
-                </td>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b text-sm">
+                <th className="px-4 py-2">Token</th>
 
-                <td className="px-4 py-2">
-                  {token.market_cap.toLocaleString()}
-                </td>
+                <th className="px-4 py-2">Last Price</th>
+                <th className="px-4 py-2">24H Change</th>
+                <th className="px-4 py-2">Market Cap</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {recentWatchList.map((token, index) => (
+                <tr key={index} className="text-sm">
+                  <td className="px-4 py-2 flex gap-2">
+                    <Image
+                      src={token.image}
+                      alt={token.name}
+                      width={25}
+                      height={25}
+                    />
+                    {token.name}{" "}
+                  </td>
+
+                  <td className="px-4 py-2">${token.current_price}</td>
+                  <td
+                    className={`px-4 py-2  ${
+                      token.price_change_percentage_24h < 0
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    <div className="flex  gap-2 align-middle">
+                      {token.price_change_percentage_24h < 0 ? (
+                        <FaArrowDown /> // Or any icon you want for negative change
+                      ) : (
+                        <FaArrowUp /> // Or any icon you want for positive change
+                      )}
+                      {token.price_change_percentage_24h}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-2">{token.market_cap}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
       
+      )}
+        </div>
     </div>
   );
 };
