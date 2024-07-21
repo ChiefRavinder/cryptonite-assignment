@@ -35,7 +35,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         handleDropdownClose();
       }
     };
@@ -53,7 +56,7 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div className="relative flex items-center justify-center w-full">
+      <div className="relative flex items-center justify-center w-full  lg:flex">
         <div className="relative px-4 shadow-md h-12 rounded-full p-1 flex items-center cursor-pointer transition-all duration-700">
           <input
             type="text"
@@ -79,30 +82,32 @@ const Navbar = () => {
                   }}
                 >
                   {filteredCoins.map((coin) => (
-                    <li
-                      key={coin.id}
-                      className="p-2 border-b border-gray-300 dark:border-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    >
-                      <div
-                        className="flex items-center"
-                        onClick={() => {
-                          // dispatch(addRecentWatchList(coins[startIndex + index]));
-                          router.push(`/coins?id=${coin.id}`);
-                        }}
+                    <Link href={`/coins?id=${coin.id}`}>
+                      <li
+                        key={coin.id}
+                        className="p-2 border-b border-gray-300 dark:border-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                       >
-                        <img
-                          src={coin.image}
-                          alt={coin.name}
-                          className="w-6 h-6 mr-2"
-                        />
-                        <div>
-                          <div className="font-medium">{coin.name}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">
-                            {coin.symbol.toUpperCase()}
+                        <div
+                          className="flex items-center"
+                          onClick={() => {
+                            // dispatch(addRecentWatchList(coins[startIndex + index]));
+                            router.push(`/coins?id=${coin.id}`);
+                          }}
+                        >
+                          <img
+                            src={coin.image}
+                            alt={coin.name}
+                            className="w-6 h-6 mr-2"
+                          />
+                          <div>
+                            <div className="font-medium">{coin.name}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                              {coin.symbol.toUpperCase()}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
+                      </li>
+                    </Link>
                   ))}
                 </ul>
               ) : (
@@ -121,4 +126,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
