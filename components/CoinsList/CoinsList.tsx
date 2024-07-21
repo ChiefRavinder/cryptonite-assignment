@@ -25,7 +25,7 @@ const CoinsList = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Number of items per page
+  const itemsPerPage = 20; // Number of items per page
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
