@@ -20,8 +20,8 @@ const PerformanceBar: React.FC<PerformanceBarProps> = ({
       {/* Today's Performance */}
       <div className="mb-4">
         <div className="flex justify-between text-sm mb-1">
-          <span>Today's Low</span>
-          <span>Today's High</span>
+          <span>Today&apos;s Low</span>
+          <span>Today&apos;s High</span>
         </div>
         <div className="relative w-full h-2 bg-gray-200 rounded">
           <div

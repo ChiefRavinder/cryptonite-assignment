@@ -82,9 +82,9 @@ const Navbar = () => {
                   }}
                 >
                   {filteredCoins.map((coin) => (
-                    <Link href={`/coins?id=${coin.id}`}>
+                    <Link key={coin.id} href={`/coins?id=${coin.id}`}>
                       <li
-                        key={coin.id}
+                        
                         className="p-2 border-b border-gray-300 dark:border-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                       >
                         <div
