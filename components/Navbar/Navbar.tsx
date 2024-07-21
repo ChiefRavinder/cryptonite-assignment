@@ -5,19 +5,25 @@ import { CiSearch } from "react-icons/ci";
 import Logo from "@/public/logo-cryptonite.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { Coin } from "@/type"; // Import Coin type
+import { Coin } from "@/type";
 import { useRouter } from "next/navigation";
+import {
+  addPastSearch,
+  removePastSearch,
+} from "@/features/pastSearches/pastSearchSlice";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
   const coins = useSelector((state: RootState) => state.coins.coins) || [];
+  const pastSearchList =
+    useSelector((state: RootState) => state.pastSearch.pastSearch) || [];
 
-  // Filter coins based on search query
   const filteredCoins = coins.filter(
     (coin: Coin) =>
       coin.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -26,11 +32,20 @@ const Navbar = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setIsDropdownOpen(true); // Open dropdown when typing
+    setIsDropdownOpen(true);
   };
 
   const handleDropdownClose = () => {
-    setIsDropdownOpen(false); // Close dropdown
+    setIsDropdownOpen(false);
+  };
+
+  const handlePastSearchRemove = (coinId: string) => {
+    dispatch(removePastSearch({ id: coinId }));
+  };
+
+  const handleCoinClick = (coin: Coin) => {
+    dispatch(addPastSearch(coin));
+    router.push(`/coins?id=${coin.id}`);
   };
 
   useEffect(() => {
@@ -56,7 +71,7 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div className="relative flex items-center justify-center w-full  lg:flex">
+      <div className="relative flex items-center justify-center w-full lg:flex">
         <div className="relative px-4 shadow-md h-12 rounded-full p-1 flex items-center cursor-pointer transition-all duration-700">
           <input
             type="text"
@@ -65,7 +80,7 @@ const Navbar = () => {
             value={searchQuery}
             onChange={handleSearchChange}
             className="dark:text-white bg-transparent outline-none text-base font-medium w-full"
-            onFocus={() => setIsDropdownOpen(true)} // Open dropdown on focus
+            onFocus={() => setIsDropdownOpen(true)}
           />
           <CiSearch className="text-black dark:text-white" />
           {isDropdownOpen && (
@@ -73,27 +88,22 @@ const Navbar = () => {
               ref={dropdownRef}
               className="absolute top-full left-0 w-full bg-white dark:bg-gray-900 shadow-lg dark:shadow-gray-800 rounded mt-1 z-20"
             >
-              {filteredCoins.length > 0 ? (
-                <ul
-                  style={{
-                    maxHeight: "15rem" /* equivalent to max-h-60 in Tailwind */,
-                    overflow: "auto",
-                    scrollbarWidth: "none" /* For Firefox */,
-                  }}
-                >
-                  {filteredCoins.map((coin) => (
-                    <Link key={coin.id} href={`/coins?id=${coin.id}`}>
+              {searchQuery ? (
+                filteredCoins.length > 0 ? (
+                  <ul
+                    style={{
+                      maxHeight: "15rem",
+                      overflow: "auto",
+                      scrollbarWidth: "none",
+                    }}
+                  >
+                    {filteredCoins.map((coin) => (
                       <li
-                        
+                        key={coin.id}
                         className="p-2 border-b border-gray-300 dark:border-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                        onClick={() => handleCoinClick(coin)}
                       >
-                        <div
-                          className="flex items-center"
-                          onClick={() => {
-                            // dispatch(addRecentWatchList(coins[startIndex + index]));
-                            router.push(`/coins?id=${coin.id}`);
-                          }}
-                        >
+                        <div className="flex items-center">
                           <img
                             src={coin.image}
                             alt={coin.name}
@@ -107,13 +117,53 @@ const Navbar = () => {
                           </div>
                         </div>
                       </li>
-                    </Link>
-                  ))}
-                </ul>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="p-2 text-center text-gray-600 dark:text-gray-400">
+                    No coins found
+                  </div>
+                )
               ) : (
-                <div className="p-2 text-center text-gray-600 dark:text-gray-400">
-                  No coins found
-                </div>
+                pastSearchList.length > 0 && (
+                  <ul
+                    style={{
+                      maxHeight: "15rem",
+                      overflow: "auto",
+                      scrollbarWidth: "none",
+                    }}
+                  >
+                    {pastSearchList.map((coin: Coin) => (
+                      <li
+                        key={coin.id}
+                        className="p-2 border-b border-gray-300 dark:border-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center"
+                      >
+                        <div
+                          className="flex items-center"
+                          onClick={() => handleCoinClick(coin)}
+                        >
+                          <img
+                            src={coin.image}
+                            alt={coin.name}
+                            className="w-6 h-6 mr-2"
+                          />
+                          <div>
+                            <div className="font-medium">{coin.name}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                              {coin.symbol.toUpperCase()}
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                          onClick={() => handlePastSearchRemove(coin.id)}
+                        >
+                          &#10005; {/* Cross icon */}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )
               )}
             </div>
           )}

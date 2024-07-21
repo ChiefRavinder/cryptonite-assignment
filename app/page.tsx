@@ -33,7 +33,7 @@ export default function Home() {
       {/* <div className="text-black dark:text-white">welcome</div> */}
 
       <div className="mx-8">
-        <div className="flex flex-1 justify-between gap-5">
+        <div className="flex flex-1 justify-between ">
           <div>
             <div className="">
               <CoinPriceChart coinIds={["bitcoin", "ethereum"]} />

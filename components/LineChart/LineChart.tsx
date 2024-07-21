@@ -200,11 +200,11 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({
   return (
     <div {...props} className="">
       <Line
-        className="w-full"
+        className="w-full flex flex-1"
         id="myChart"
         data={chartData}
         options={options}
-        style={{ height: "100%" }}
+        // style={{ height: "100%" }}
       />
       <div className="flex gap-2 justify-center mt-4">
         {Object.keys(timeRanges).map((range) => (
