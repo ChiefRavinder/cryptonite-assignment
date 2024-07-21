@@ -35,16 +35,12 @@ export default function Home() {
       <div className="mx-8">
         <div className="flex flex-1 justify-between gap-5">
           <div>
-            <div className="w-100vw">
+            <div className="w-full">
               <CoinPriceChart coinIds={["bitcoin","ethereum"]} />
             </div>
             <div className="relative">
               <CoinsList />
-              <Link href="/explore">
-                <span className="absolute top-2 right-2 flex justify-end hover:text-green-500">
-                  View More
-                </span>
-              </Link>
+              
             </div>
           </div>
           <div className="flex-col gap-10">

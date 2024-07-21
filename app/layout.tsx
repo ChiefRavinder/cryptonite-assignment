@@ -21,8 +21,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <ThemeProvider enableSystem={true} attribute="class">
-            <Navbar />
-            {children}
+            {/* <div className="bg-gray-200 dark:bg-[#121212]"> */}
+              <Navbar />
+              {children}
+            {/* </div> */}
           </ThemeProvider>
         </Providers>
       </body>

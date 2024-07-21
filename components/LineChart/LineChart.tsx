@@ -30,7 +30,7 @@ ChartJS.register(
 );
 
 interface CoinPriceChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  coinIds: string[]; // Change to array of coin IDs
+  coinIds: string[];
 }
 
 const timeRanges: Record<string, number> = {
@@ -195,37 +195,41 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({
 
   useEffect(() => {
     fetchChartData();
-  }, [selectedRange, coinIds]); // Add coinIds to dependency array
+  }, [selectedRange, coinIds]);
 
   return (
     <div {...props} className="relative w-full h-auto">
-      <div className="absolute bottom-[-3rem] right-0 p-2">
-        <select
-          value={selectedRange}
-          onChange={(e) => setSelectedRange(e.target.value)}
-          className="px-4 py-2 border-b border-gray-300"
-        >
-          {Object.keys(timeRanges).map((range) => (
-            <option key={range} value={range}>
-              {range}
-            </option>
-          ))}
-        </select>
-      </div>
       <Line
         className="w-full"
         id="myChart"
         data={chartData}
         options={options}
-        style={{ height: "100%" }} // Ensure full height of parent container
+        style={{ height: "100%" }}
       />
+      <div className="flex gap-2 justify-center mt-4">
+        {Object.keys(timeRanges).map((range) => (
+          <button
+            key={range}
+            onClick={() => setSelectedRange(range)}
+            className={`text-xs px-2 py-1 rounded 
+            ${
+              selectedRange === range
+                ? "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-200"
+                : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400"
+            }`}
+          >
+            {range}
+          </button>
+        ))}
+      </div>
+
       <div className="absolute top-0 right-0 p-2">
-        <button
+        {/* <button
           onClick={() => setShowDropdown(!showDropdown)}
           className="p-1 bg-white bg-opacity-30 border border-black dark:border-white border-opacity-20 rounded-lg shadow-lg backdrop-blur-lg text-white transition-transform transform hover:scale-105"
         >
           <MdAdd className="text-gray-600 dark:text-white" size={15} />
-        </button>
+        </button> */}
 
         {showDropdown && (
           <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">

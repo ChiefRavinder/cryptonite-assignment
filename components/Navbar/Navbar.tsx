@@ -52,7 +52,7 @@ const Navbar = () => {
       <Link href="/">
         <div className="flex">
           <Image src={Logo} width={20} height={20} alt="logo-cryptonite" />
-          <h1 className="ml-1">Cryptonite</h1>
+          <h1 className="ml-1 font-bold">Cryptonite</h1>
         </div>
       </Link>
 

@@ -14,25 +14,25 @@ const StatsCard: React.FC<StatsCardProps> = ({ marketCap, volume, maxSupply, cir
     <table className="min-w-full space-x-4 rounded-lg">
       <thead>
         <tr className='  '>
-          <th className=" bg-gray-900 rounded-lg py-4 px-6 text-center">
+          <th className=" bg-gray-200 dark:bg-gray-900 rounded-lg py-4 px-6 text-center">
             <div className="flex items-center justify-center space-x-2">
               <FaAnchor className='text-gray-500' />
               <span className="font-regular">Market Cap</span>
             </div>
           </th>
-          <th className="bg-gray-900 rounded-lg py-4 px-6 text-center">
+          <th className="bg-gray-200 dark:bg-gray-900 rounded-lg py-4 px-6 text-center">
             <div className="flex items-center justify-center space-x-2">
               <FaBolt className='text-gray-500'  />
               <span>Volume (24h)</span>
             </div>
           </th>
-          <th className="bg-gray-900 rounded-lg py-4 px-6 text-center">
+          <th className="bg-gray-200 dark:bg-gray-900 rounded-lg py-4 px-6 text-center">
             <div className="flex items-center justify-center space-x-2">
               <FaSync className='text-gray-500' />
               <span>Max Supply</span>
             </div>
           </th>
-          <th className="bg-gray-900 rounded-lg py-4 px-6 text-center">
+          <th className="bg-gray-200 dark:bg-gray-900 rounded-lg py-4 px-6 text-center">
             <div className="flex items-center justify-center space-x-2">
               <FaSync className='text-gray-500' />
               <span>Circulating Supply</span>

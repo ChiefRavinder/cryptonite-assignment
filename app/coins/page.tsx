@@ -7,20 +7,18 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import StatsCard from "@/components/StatCards/StatCard";
+import PerformanceBar from "@/components/PerformanceBar/PerformanceBar";
+import parse from "html-react-parser";
 
 // Define the structure of the data object
 interface MarketData {
-  current_price: {
-    usd: number;
-  };
+  high_24h: { usd: number };
+  low_24h: { usd: number };
+  current_price: { usd: number };
   price_change_percentage_24h: number;
   price_change_24h: number;
-  market_cap: {
-    usd: number;
-  };
-  total_volume: {
-    usd: number;
-  };
+  market_cap: { usd: number };
+  total_volume: { usd: number };
   max_supply: number | null;
   circulating_supply: number;
 }
@@ -96,7 +94,7 @@ const Page = () => {
               <div className="flex items-center gap-2 ">
                 ${data.market_data.current_price.usd}
                 <div
-                  className={`flex items-center p-1 rounded-md bg-gray-900 ${
+                  className={`flex items-center p-1 rounded-md bg-gray-200 dark:bg-gray-900 ${
                     data.market_data.price_change_24h < 0
                       ? "text-red-500"
                       : "text-green-500"
@@ -126,12 +124,19 @@ const Page = () => {
                 circulatingSupply={`${data.market_data.circulating_supply} ${data.symbol}`}
               />
             </div>
-            <div className="h-full">
+            <div className="">
               <CoinPriceChart coinIds={[id as string]} />
             </div>
-            {data.description.en}
+            <PerformanceBar
+              todayLow={data.market_data.low_24h.usd}
+              todayHigh={data.market_data.high_24h.usd}
+            />
+            <div className="pl-4">
+              <h2 className="text-xl font-bold mb-4">Description</h2>
+            </div>
+            <div className="pl-4 mb-4 text-sm">{parse(data.description.en)}</div>
           </div>
-          <div className="flex-col gap-10">
+          <div className="flex-col gap-10 hidden md:flex">
             <RecentlyViewed />
             <WatchList />
           </div>

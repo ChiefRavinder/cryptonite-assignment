@@ -11,7 +11,11 @@ import { useRouter } from "next/navigation";
 import { addRecentWatchList } from "@/features/recentList/recentListSlice";
 import Cookies from "js-cookie";
 import axios from "axios";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 const CoinsList = () => {
+  const pathname = usePathname();
   const CACHE_KEY = "coins_cache";
   const CACHE_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
   const router = useRouter();
@@ -26,9 +30,9 @@ const CoinsList = () => {
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     const fetchCoins = async () => {
-      console.log("Fetching coins from API");
+      // console.log("Fetching coins from API");
       const res = await fetch(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc",
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
         // {
         //   headers: {
         //     "x-cg-pro-api-key": `${apiKey}`,
@@ -38,8 +42,8 @@ const CoinsList = () => {
 
       const repo: Coin[] = await res.json();
       // Cache the fetched data with the current timestamp
-      console.log("Setting cookies with fetched data")
-      console.log(apiKey)
+      // console.log("Setting cookies with fetched data")
+      console.log(apiKey);
       // Cookies.set(
       //   "cookies_main",
       //   JSON.stringify({ timestamp: Date.now(), data: repo }),
@@ -54,7 +58,7 @@ const CoinsList = () => {
     //   const { timestamp, data } = JSON.parse(cachedData);
     //   if (Date.now() - timestamp < CACHE_EXPIRY_TIME) {
     //     console.log("Using cached data");
-        
+
     //     dispatch(setCoins(data));
     //   } else {
     //     console.log("Cached data expired, fetching new data");
@@ -66,7 +70,7 @@ const CoinsList = () => {
     // }
     fetchCoins();
   }, []);
- 
+
   if (!coins) {
     return <div>No data available</div>;
   }
@@ -83,9 +87,16 @@ const CoinsList = () => {
   const totalPages = Math.ceil(coins.length / itemsPerPage);
 
   return (
-    <div>
+    <div className="">
       <div className="p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
+        <div className="flex justify-between">
+          <h2 className="text-xl font-semibold mb-4">Trending Market</h2>
+          {!pathname.includes("explore") && (
+            <Link href="/explore">
+              <span className=" flex hover:text-green-500">View More</span>
+            </Link>
+          )}
+        </div>
         <table className="w-full text-left">
           <thead>
             <tr className="text-sm border-b">
@@ -104,7 +115,10 @@ const CoinsList = () => {
                   router.push(`/coins?id=${token.id}`);
                 }}
                 key={index}
-                className="text-gray-200 text-sm hover:bg-gray-200 dark:hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white"
+                className={`text-gray-600 dark:text-gray-200 text-sm hover:bg-gray-200 dark:hover:bg-slate-900 rounded-sm cursor-grab active:opacity-0.7 border-1 border-solid border-[#1111] dark:border-white ${
+                  // Apply shake animation on hover
+                  "hover:shake"
+                }`}
                 draggable
                 onDragStart={() => {
                   dispatch(setNumber(startIndex + index));
@@ -145,11 +159,11 @@ const CoinsList = () => {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-between mt-4">
+        <div className="w-full flex justify-between mt-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded disabled:opacity-50"
           >
             Previous
           </button>
@@ -159,7 +173,7 @@ const CoinsList = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded disabled:opacity-50"
           >
             Next
           </button>
