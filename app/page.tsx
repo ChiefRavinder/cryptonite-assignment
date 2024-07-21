@@ -36,14 +36,13 @@ export default function Home() {
         <div className="flex flex-1 justify-between gap-5">
           <div>
             <div className="">
-              <CoinPriceChart coinIds={["bitcoin","ethereum"]} />
+              <CoinPriceChart coinIds={["bitcoin", "ethereum"]} />
             </div>
             <div className="">
               <CoinsList />
-              
             </div>
           </div>
-          <div className="flex-col gap-10">
+          <div className="flex-col gap-10 hidden md:flex">
             <RecentlyViewed />
             <WatchList />
           </div>

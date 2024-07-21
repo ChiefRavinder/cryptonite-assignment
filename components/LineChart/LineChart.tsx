@@ -198,7 +198,7 @@ const CoinPriceChart: React.FC<CoinPriceChartProps> = ({
   }, [selectedRange, coinIds]);
 
   return (
-    <div {...props} className="relative w-full h-auto">
+    <div {...props} className="">
       <Line
         className="w-full"
         id="myChart"
